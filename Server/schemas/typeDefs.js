@@ -18,18 +18,30 @@ const typeDefs = gql`
     token: ID!
     user: User
   }
-
+  type Show {
+    showId: String
+    genre: [String]
+    title: String
+    description: String
+    backdrop: String
+    type: String
+  }
+  input ShowInput {
+    showId: String
+    genre: [String]
+    title: String
+    description: String
+    backdrop: String
+    type: String
+  }
   type Query {
     me: User
-    users: [User]
-    user(username: String!): User
-    
   }
-
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
-    addFriend(friendId: ID!): User
+    saveShow(showData: ShowInput!): User
+    removeShow(showId: ID!): User
   }
 
 `;
