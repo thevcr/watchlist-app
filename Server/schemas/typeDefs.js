@@ -5,43 +5,50 @@ const typeDefs = gql`
     _id: ID
     username: String
     email: String
-    friendCount: Int
-    friends: [User]
-  }
-  type Reaction {
-    _id: ID
-    reactionBody: String
-    createdAt: String
-    username: String
+    titleCount: Int
+    savedTitles: [ListTitle]
   }
   type Auth {
     token: ID!
     user: User
   }
-  type Show {
-    showId: String
-    genre: [String]
-    title: String
-    description: String
-    backdrop: String
-    type: String
-  }
-  input ShowInput {
-    showId: String
-    genre: [String]
-    title: String
-    description: String
-    backdrop: String
-    type: String
-  }
+  # type Genre {
+  #   _id: ID,
+  #   genre: String
+  # }
+  # type ListTitle {
+  #   titleId: String
+  #   titles: [String]
+  #   limit: Int
+  # }
+  # input ListTitleInput {
+  #   titleId: String
+  #   titles: [String]
+  #   limit: Int
+  # }
+  # type TitleDetails {
+  #   titleId: String
+  #   title: String
+  #   plotOverview: String
+  #   type: String
+  #   runtimeMinutes: Int
+  #   genreNames: [String]
+  #   userRating: Int
+  #   criticScore: Int
+  #   originalLanguage: String
+  #   networkNames: [String]
+  #   trailer: String
+  #   sources: [String]
+  # }
   type Query {
     me: User
+    titles: [ListTitle]
   }
   type Mutation {
     login(email: String!, password: String!): Auth
     addUser(username: String!, email: String!, password: String!): Auth
-    saveShow(showData: ShowInput!): User
-    removeShow(showId: ID!): User
+    saveTitle(titleData: ListTitleInput!): User
+    removeTitle(titleId: ID!): User
   }
 
 `;

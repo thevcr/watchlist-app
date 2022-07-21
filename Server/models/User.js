@@ -1,7 +1,8 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const showSchema = require('./Show');
+const listTitleSchema = require('./ListTitle');
+const titleDetailsSchema = require('./TitleDetails');
 
 const userSchema = new Schema(
   {
@@ -23,7 +24,7 @@ const userSchema = new Schema(
       minlength: 6,
       maxLength: 20
     },
-    savedShows: [showSchema]
+    savedTitles: [titleDetailsSchema]
   },
   {
     toJSON: {
@@ -47,9 +48,9 @@ userSchema.methods.isCorrectPassword = async function(password) {
   return bcrypt.compare(password, this.password);
 };
 
-// when we query a user, we'll also get another field called `showCount` with the number of saved books we have
-userSchema.virtual('showCount').get(function() {
-  return this.savedShows.length;
+// when we query a user, we'll also get another field called `titleCount` with the number of saved titles we have
+userSchema.virtual('titleCount').get(function() {
+  return this.savedTitles.length;
 });
 
 const User = model('User', userSchema);
