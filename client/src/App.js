@@ -1,5 +1,5 @@
 import QuizPage from "./components/quiz-page";
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar";
 import React from "react";
 import SearchTitles from "./pages/SearchTitles";
 

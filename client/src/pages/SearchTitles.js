@@ -32,13 +32,14 @@ const SearchTitles = () => {
     }
 
     try {
-      const response = await fetch (`https://api.watchmode.com/v1/list-titles/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}&search_value=${searchInput}`);
+      const response = await fetch (`https://api.watchmode.com/v1/list-titles/?apiKey=3NIdl37WmmKuolyvr035ERkCNnMLGTjXsYHFg8GE&source_ids=203,57'`);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
       }
 
       const { items } = await response.json();
+      console.log(items)
 
       const titleData = items.map((title) => ({
         titleId: title.id,
