@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Col, Form, Button, Card, CardGroup } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, CardGroup } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
 import { saveTitleIds, getSavedTitleIds } from '../utils/localStorage';
@@ -32,7 +32,7 @@ const SearchTitles = () => {
     }
 
     try {
-      const response = await fetch (`https://api.watchmode.com/v1/list-titles/?apiKey=${process.env.API_KEY}&search_value=${searchInput}`);
+      const response = await fetch (`https://api.watchmode.com/v1/list-titles/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}&search_value=${searchInput}`);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
@@ -88,11 +88,11 @@ const SearchTitles = () => {
 
   return (
     <>
-      <div fluid className='text-light bg-dark jumbotron'>
+    <div>
         <Container>
           <h1>Search for Titles!</h1>
           <Form onSubmit={handleFormSubmit}>
-            <Form.Row>
+            <Row>
               <Col xs={12} md={8}>
                 <Form.Control
                   name='searchInput'
@@ -108,10 +108,10 @@ const SearchTitles = () => {
                   Submit Search
                 </Button>
               </Col>
-            </Form.Row>
+            </Row>
           </Form>
         </Container>
-      </div>
+    </div>
 
       <Container>
         <h2>

@@ -1,66 +1,106 @@
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import postData from "../util";
+import React, { useState, useEffect } from "react";
+import { useMutation } from "@apollo/client";
+import { LOGIN_USER } from "../utils/mutations";
+import { Form, Button, Alert } from "react-bootstrap";
+import Auth from "../utils/auth";
 
-const Login = ({}) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [userFormData, setUserFormData] = useState({ email: "", password: "" });
+  const [validated] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [login, { error }] = useMutation(LOGIN_USER);
 
-  const onLogin = () => {
-    console.log(username);
-    console.log(password);
-    postData("api/login", { username, password }).then((data) => {
-      console.log(data);
-      //if user is authenticated then return true
-      //else user is not authenticated then tell user it failed
+  useEffect(() => {
+    if (error) {
+      setShowAlert(true);
+    } else {
+      setShowAlert(false);
+    }
+  }, [error]);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setUserFormData({ ...userFormData, [name]: value });
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    // check if form has everything (as per react-bootstrap docs)
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    try {
+      const { data } = await login({
+        variables: { ...userFormData },
+      });
+
+      Auth.login(data.login.token);
+    } catch (err) {
+      console.error(err);
+    }
+
+    setUserFormData({
+      username: "",
+      email: "",
+      password: "",
     });
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center">
-        <Col lg="4">
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Username </Form.Label>
-            <Form.Control
-              onChange={setUsername}
-              type="email"
-              placeholder="Enter email"
-            />
-          </Form.Group>
+    <>
+      <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
+        <Alert
+          dismissible
+          onClose={() => setShowAlert(false)}
+          show={showAlert}
+          variant="danger"
+        >
+          Something went wrong with your login credentials!
+        </Alert>
+        <Form.Group>
+          <Form.Label htmlFor="email">Email</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Your email"
+            name="email"
+            onChange={handleInputChange}
+            value={userFormData.email}
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Email is required!
+          </Form.Control.Feedback>
+        </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Password </Form.Label>
-            <Form.Control
-              onChange={setPassword}
-              type="password"
-              placeholder="Enter password"
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center">
-        <Col lg="2">
-          <Button onClick={onLogin}>Login </Button>
-        </Col>
-      </Row>
-      <Row className="justify-content-md-center">
-        <Col lg="2">
-          <Button>Register </Button>
-        </Col>
-      </Row>
-    </Container>
+        <Form.Group>
+          <Form.Label htmlFor="password">Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Your password"
+            name="password"
+            onChange={handleInputChange}
+            value={userFormData.password}
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Password is required!
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button
+          className="mt-2"
+          disabled={!(userFormData.email && userFormData.password)}
+          type="submit"
+          variant="success"
+        >
+          Submit
+        </Button>
+      </Form>
+    </>
   );
 };
 
 export default Login;
-
-//server routes for login
-//send username and password to routes
-//interpret what we get back to determine if user is logged in or not
-//if logged in then show that you're logged in
-//if not logged in then error message
