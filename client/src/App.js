@@ -1,5 +1,8 @@
+import QuizPage from "./pages/QuizPage";
+import Navbar from "./components/Navbar";
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
@@ -7,8 +10,6 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import SearchTitles from "./pages/SearchTitles";
-import Navbar from "./components/Navbar";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -32,15 +33,15 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Router>
+      <BrowserRouter>
         <>
-        <Navbar />
+          <Navbar />
           <Routes>
-            <Route path="/" element={<SearchTitles/>} />
-            <Route render={() => <h1 className="display-2">Wrong page!</h1>} />
+            <Route path="/" element={<QuizPage />} />
+            {/* <Route path="/quiz-page" element={<QuizPage />} /> */}
           </Routes>
         </>
-      </Router>
+      </BrowserRouter>
     </ApolloProvider>
   );
 }
