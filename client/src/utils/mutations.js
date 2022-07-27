@@ -27,18 +27,12 @@ export const ADD_USER = gql`
 export const SAVE_TITLE = gql`
   mutation saveTitle($titleData: ListTitleInput!) {
     saveTitle(titleData: $titleData) {
-        titleId
-        title
-        plotOverview
-        type
-        runtimeMinutes
-        genreNames
-        userRating
-        criticScore
-        originalLanguage
-        networkNames
-        trailer
-        sources
+        _id
+        username
+        email
+        savedTitles {
+          titleId
+        }
     }
   }
 `;

@@ -57,12 +57,3 @@ export const GET_TITLEDETAILS = gql`
     }
   }
 `;
-
-export const GET_GENRES = gql`
-  {
-    genres [{
-      _id
-      name
-      }]
-  }
-`;

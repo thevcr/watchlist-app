@@ -1,7 +1,6 @@
-import QuizPage from "./components/quiz-page";
+import QuizPage from "./pages/QuizPage";
 import Navbar from "./components/Navbar";
 import React from "react";
-import SearchTitles from "./pages/SearchTitles";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
@@ -38,8 +37,8 @@ function App() {
         <>
           <Navbar />
           <Routes>
-            <Route path="/" element={<SearchTitles />} />
-            <Route path="/quiz-page" element={<QuizPage />} />
+            <Route path="/" element={<QuizPage />} />
+            {/* <Route path="/quiz-page" element={<QuizPage />} /> */}
           </Routes>
         </>
       </BrowserRouter>

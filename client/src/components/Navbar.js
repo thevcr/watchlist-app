@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Modal, Tab } from 'react-bootstrap';
-import Signup from './signup';
-import Login from './login';
+import Signup from './Signup';
+import Login from './Login';
 
 import Auth from '../utils/auth';
 
