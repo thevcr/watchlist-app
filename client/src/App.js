@@ -1,6 +1,9 @@
 import QuizPage from "./pages/QuizPage";
 import Navbar from "./components/Navbar";
+import LandingPage from "./pages/LandingPage"
 import React from "react";
+// 1. import `ChakraProvider` component
+import { ChakraProvider } from '@chakra-ui/react'
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
@@ -33,15 +36,17 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
+      <ChakraProvider>
       <BrowserRouter>
         <>
           <Navbar />
           <Routes>
-            <Route path="/" element={<QuizPage />} />
-            {/* <Route path="/quiz-page" element={<QuizPage />} /> */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/QuizPage" element={<QuizPage />} />
           </Routes>
         </>
       </BrowserRouter>
+      </ChakraProvider>
     </ApolloProvider>
   );
 }
