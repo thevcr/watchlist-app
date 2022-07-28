@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Row, Form, Card, CardGroup } from "react-bootstrap";
+import { Card, CardGroup } from "react-bootstrap";
 import { fetchListTitles } from "../utils/apis/list-titles";
-import Auth from '../utils/auth';
-import { saveTitleIds, getSavedTitleIds } from '../utils/localStorage';
-import { useMutation } from '@apollo/client';
+import Auth from "../utils/auth";
+import { saveTitleIds, getSavedTitleIds } from "../utils/localStorage";
+import { useMutation } from "@apollo/client";
 import { SAVE_TITLE } from "../utils/mutations";
 import { fetchTitleDetails } from "../utils/apis/title-details";
-import { Spinner, Divider } from "@chakra-ui/react";
+import {
+  Spinner,
+  Divider,
+  Box,
+  Container,
+  VStack,
+  FormControl,
+  Button,
+  FormLabel,
+  Image,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
+import { Select, CreatableSelect } from "chakra-react-select";
+import { FaRegistered } from "react-icons/fa";
 
 const QuizPage = () => {
   const [error, setError] = useState(null);
@@ -14,8 +28,8 @@ const QuizPage = () => {
   const [genres, setGenres] = useState([]);
   const [sources, setSources] = useState([]);
   // create state for holding returned titleid data
-  const [searchedTitles, setSearchedTitles] = useState([])
-  const [displayedTitles, setDisplayedTitles] = useState([])
+  const [searchedTitles, setSearchedTitles] = useState([]);
+  const [displayedTitles, setDisplayedTitles] = useState([]);
   // create state for holding returned selected source, genre, type vals
   const [sourceValues, setSourceValues] = useState([]);
   const [genreValues, setGenreValues] = useState([]);
@@ -26,11 +40,11 @@ const QuizPage = () => {
 
   // hard coding types
   const types = [
-    { name: "TV Series", value: "tv_series" },
-    { name: "Movies", value: "movie" },
-    { name: "TV Special", value: "tv_special" },
-    { name: "TV Miniseries", value: "tv_miniseries" },
-    { name: "Short Film", value: "short_film" },
+    { label: "TV Series", value: "tv_series" },
+    { label: "Movies", value: "movie" },
+    { label: "TV Special", value: "tv_special" },
+    { label: "TV Miniseries", value: "tv_miniseries" },
+    { label: "Short Film", value: "short_film" },
   ];
 
   // set up useEffect hook to save `savedTitleIds` list to localStorage on component unmount
@@ -41,7 +55,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/sources/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}`
+      `https://api.watchmode.com/v1/sources/?apiKey=54BD2C8NTMcdfjYt6cg8IwgYnUeiojg3Ogo5i4mR`
     )
       .then((res) => res.json())
       .then(
@@ -61,7 +75,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/genres/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}`
+      `https://api.watchmode.com/v1/genres/?apiKey=54BD2C8NTMcdfjYt6cg8IwgYnUeiojg3Ogo5i4mR`
     )
       .then((res) => res.json())
       .then(
@@ -81,8 +95,11 @@ const QuizPage = () => {
 
   const handleUserSelection = async () => {
     try {
-      const response = await fetchListTitles(sourceValues, genreValues, typeValues);
-      
+      const response = await fetchListTitles(
+        sourceValues,
+        genreValues,
+        typeValues
+      );
 
       if (!response.ok) {
         throw new Error("something went wrong!");
@@ -91,23 +108,22 @@ const QuizPage = () => {
       const { titles } = await response.json();
 
       const titleData = titles.map((title) => ({
-        titleId: title.id
+        titleId: title.id,
       }));
 
-      setSearchedTitles(titleData); 
-  
+      setSearchedTitles(titleData);
+
       let detailsResponse = [];
 
       for (let index = 0; index < titleData.length; index++) {
-        const detailsRes = await 
-        fetchTitleDetails(titleData[index].titleId);
+        const detailsRes = await fetchTitleDetails(titleData[index].titleId);
 
         const json = await detailsRes.json();
         detailsResponse.push(json);
-        
+
         if (!detailsRes.ok) {
           throw new Error("something went wrong!");
-        } 
+        }
       }
 
       const detailsData = detailsResponse.map((detail) => ({
@@ -116,16 +132,16 @@ const QuizPage = () => {
         plotOverview: detail.plot_overview,
         type: detail.type.charAt(0).toUpperCase() + detail.type.slice(1),
         poster: detail.poster,
-        runtimeMinutes: detail.runtime_minutes + " mins" || 'No runtime to display',
-        genreNames: detail.genre_names.join(", ") || 'No genres to display',
+        runtimeMinutes:
+          detail.runtime_minutes + " mins" || "No runtime to display",
+        genreNames: detail.genre_names.join(", ") || "No genres to display",
         userRating: detail.user_rating,
         criticsRating: detail.critic_score,
-        networkNames: detail.network_names || 'No networks to display',
-        trailer: detail.trailer || 'No trailers to display'
+        networkNames: detail.network_names || "No networks to display",
+        trailer: detail.trailer || "No trailers to display",
       }));
 
       setDisplayedTitles(detailsData);
-
     } catch (err) {
       console.error(err);
     }
@@ -134,7 +150,9 @@ const QuizPage = () => {
   // create function to handle saving a title to our database
   const handleSaveTitle = async (titleId) => {
     // find the title in `searchedTitles` state by the matching id
-    const titleToSave = displayedTitles.find((title) => title.titleId === titleId);
+    const titleToSave = displayedTitles.find(
+      (title) => title.titleId === titleId
+    );
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -146,7 +164,7 @@ const QuizPage = () => {
     try {
       await saveTitle({
         variables: { titleData: { ...titleToSave } },
-      });     
+      });
 
       // if title successfully saves to user's account, save title id to state
       setSavedTitleIds([...savedTitleIds, titleToSave.titleId]);
@@ -162,140 +180,155 @@ const QuizPage = () => {
   };
 
   const handleChangeSource = (event) => {
-    event.preventDefault();
-
-    setSourceValues(
-      [...event.target.selectedOptions].map((option) => option.value)
-    );
+    if (event.target === "select-multiple") {
+      setSourceValues(
+        [...event.target.selectedOptions].map((option) => option.value)
+      );
+    }
   };
 
   const handleChangeType = (event) => {
-    event.preventDefault();
-
-    setTypeValues(
-      [...event.target.selectedOptions].map((option) => option.value)
-    );
+    if (event.target === "select-multiple") {
+      setTypeValues(
+        [...event.target.selectedOptions].map((option) => option.value)
+      );
+    }
   };
   const handleChangeGenre = (event) => {
-    event.preventDefault();
-
-    setGenreValues(
-      [...event.target.selectedOptions].map((option) => option.value)
-    );
+    if (event.target === "select-multiple") {
+      setGenreValues(
+        [...event.target.selectedOptions].map((option) => option.value)
+      );
+    }
   };
 
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div><Spinner
-    thickness='4px'
-    speed='0.65s'
-    emptyColor='gray.200'
-    color='blue.500'
-    size='xl'
-  /></div>;
+    return (
+      <div>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </div>
+    );
   } else {
     return (
       <>
-        <Container fluid="md">
-        <h2 className="mt-3">
-        Set your filter criteria! Select one or more of each criteria to get back a personalized selection.
-        </h2>
-          <Form onSubmit={handleSubmit}>
-            <Row>
-              <Form.Select
-                className="mt-3"
-                multiple={true}
-                onChange={handleChangeType}
-              >
-                {/* <option name="types" disabled>
-                  Select Types(s){" "}
-                </option> */}
-                {isLoaded &&
-                  types.map((type) => (
-                    <option key={type.value}value={type.value}>{type.name}</option>
-                  ))}
-              </Form.Select>
-            </Row>
-            <Row>
-              <Form.Select
-                className="mt-3"
-                multiple={true}
-                onChange={handleChangeSource}
-              >
-                {/* <option name="sources" disabled>
-                  Select Source(s){" "}
-                </option> */}
-                {isLoaded &&
-                  sources.map((source) => (
-                    <option key={source.id} value={source.id}>{source.name}</option>
-                  ))}
-              </Form.Select>
-            </Row>
-            <Row>
-              <Form.Select
-                className="mt-3"
-                multiple={true}
-                onChange={handleChangeGenre}
-              >
-                {/* <option name="genres" disabled>
-                  Select Genre(s){" "}
-                </option> */}
-                {isLoaded &&
-                  genres.map((genre) => (
-                    <option key={genre.id} value={genre.id}>{genre.name}</option>
-                  ))}
-              </Form.Select>
-            </Row>
-            <Row>
-              <Button className="my-3" type="submit">
-                {" "}
-                Find Your Shows/Movies{" "}
-              </Button>
-            </Row>
-          </Form>
-        </Container>
+        <Box>
+          <FormControl p={4}>
+            <FormLabel>Select type of show or movie</FormLabel>
+            <Select
+              isMulti
+              name="types"
+              options={types}
+              size="md"
+              placeholder="Select one or more types"
+              closeMenuOnSelect={false}
+              onChange={handleChangeType}
+            ></Select>
+
+            <Select
+              isMulti
+              name="sources"
+              options={
+                isLoaded &&
+                sources.map(({ id, name }) => ({ value: id, label: name }))
+              }
+              size="md"
+              placeholder="Select one or more viewing sources"
+              closeMenuOnSelect={false}
+              onChange={handleChangeSource}
+            ></Select>
+
+            <Select
+              isMulti
+              name="genres"
+              options={
+                isLoaded &&
+                genres.map(({ id, name }) => ({ value: id, label: name }))
+              }
+              size="md"
+              placeholder="Select one or more genres"
+              closeMenuOnSelect={false}
+              onChange={handleChangeGenre}
+            ></Select>
+
+            <Button my={16} colorScheme="blue" type="submit" onClick={handleSubmit}>
+              {" "}
+              Find Your Shows/Movies{" "}
+            </Button>
+          </FormControl>
+        </Box>
+
         <Divider />
         <Container>
-        <h2>
-          {displayedTitles.length
-            ? `Viewing ${displayedTitles.length} results:`
-            : ''}
-        </h2>
-        <CardGroup>
-          {displayedTitles.map((detail) => {
-            return (
-              <Card key={detail.titleId} border='dark'>
-                {detail.poster ? (
-                  <Card.Img src={detail.poster} alt={`The cover for ${detail.title}`} variant='top' />
-                ) : null}
-                <Card.Body>
-                  <Card.Title>{detail.title}</Card.Title>
-                  <p className='small'>Runtime: {detail.runtimeMinutes}</p>
-                  <p className='small'>Genres: {detail.genreNames}</p>
-                  {/* <p className='small'>Sources: {detail.sources.name}</p> */}
-                  <p className='small'>Type: {detail.type}</p>
-                  <p className='small'>User Rating: {detail.userRating}</p>
-                  <p className='small'>Critics Rating: {detail.criticsRating}</p>
+          <h2>
+            {displayedTitles.length
+              ? `Viewing ${displayedTitles.length} results:`
+              : ""}
+          </h2>
+          <CardGroup>
+            {displayedTitles.map((detail) => {
+              return (
+                <Card key={detail.titleId} border="dark">
+                  {detail.poster ? (
+                    <Card.Img
+                      src={detail.poster}
+                      alt={`The cover for ${detail.title}`}
+                      variant="top"
+                    />
+                  ) : null}
+                  <Card.Body>
+                    <Card.Title>{detail.title}</Card.Title>
+                    <p className="small">Runtime: {detail.runtimeMinutes}</p>
+                    <p className="small">Genres: {detail.genreNames}</p>
+                    {/* <p className='small'>Sources: {detail.sources.name}</p> */}
+                    <p className="small">Type: {detail.type}</p>
+                    <p className="small">User Rating: {detail.userRating}</p>
+                    <p className="small">
+                      Critics Rating: {detail.criticsRating}
+                    </p>
 
-                  <Card.Text className='mt-3'>{detail.plotOverview}</Card.Text>
-                  {/* <p className="mt-3"><iframe width="230" height="205" src={detail.trailer} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p> */}
-                  {Auth.loggedIn() && (
-                    <Button
-                      disabled={savedTitleIds?.some((savedTitleId) => savedTitleId === detail.titleId)}
-                      className='btn-block btn-info mt-3'
-                      onClick={() => handleSaveTitle(detail.titleId)}>
-                      {savedTitleIds?.some((savedTitleId) => savedTitleId === detail.titleId)
-                        ? 'Added to your Watchlist'
-                        : 'Add to Watchlist'}
-                    </Button>
-                  )}
-                </Card.Body>
-              </Card>
-            );
-          })}
-        </CardGroup>
-      </Container>
+                    <Card.Text className="mt-3">
+                      {detail.plotOverview}
+                    </Card.Text>
+                    {/* <p className="mt-3">
+                      <iframe
+                        width="230"
+                        height="205"
+                        src={detail.trailer}
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                      ></iframe>
+                    </p> */}
+                    {Auth.loggedIn() && (
+                      <Button
+                        disabled={savedTitleIds?.some(
+                          (savedTitleId) => savedTitleId === detail.titleId
+                        )}
+                        className="btn-block btn-info mt-3"
+                        onClick={() => handleSaveTitle(detail.titleId)}
+                      >
+                        {savedTitleIds?.some(
+                          (savedTitleId) => savedTitleId === detail.titleId
+                        )
+                          ? "Added to your Watchlist"
+                          : "Add to Watchlist"}
+                      </Button>
+                    )}
+                  </Card.Body>
+                </Card>
+              );
+            })}
+          </CardGroup>
+        </Container>
       </>
     );
   }
