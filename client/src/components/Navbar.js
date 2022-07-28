@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Modal, Tab } from 'react-bootstrap';
-<<<<<<< HEAD
-import Signup from './signup';
-import Login from './login';
-
-=======
 import { Link } from "react-router-dom"
 import Signup from './Signup';
 import Login from './Login';
->>>>>>> d595b1b4c6cd2c59384b1146f6ae5916e98b644d
 import Auth from '../utils/auth';
 
 const AppNavbar = () => {
