@@ -14,5 +14,9 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.1.0"
+  },
+  "dependencies": {
+    "chakra-react-select": "^4.1.4",
+    "react-icons": "^4.4.0"
   }
 }

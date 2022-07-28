@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Row, Form, Card, CardGroup } from "react-bootstrap";
+import { Box, Container, VStack, FormControl, Button, FormLabel, Image, Heading, Text } from '@chakra-ui/react';
+import { Select, CreatableSelect } from "chakra-react-select";
+// import { Button, Container, Row, Form, Card, CardGroup } from "react-bootstrap";
 import { fetchListTitles } from "../utils/list-titles";
 import Auth from '../utils/auth';
 import { saveTitleIds, getSavedTitleIds } from '../utils/localStorage';
 import { useMutation } from '@apollo/client';
 import { SAVE_TITLE } from "../utils/mutations";
 import { fetchTitleDetails } from "../utils/title-details";
+// import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
+import { FaRegistered } from "react-icons/fa";
 
 const QuizPage = () => {
   const [error, setError] = useState(null);
@@ -31,16 +35,16 @@ const QuizPage = () => {
   });
 
   const types = [
-    { name: "TV Series", value: "tv_series" },
-    { name: "Movies", value: "movie" },
-    { name: "TV Special", value: "tv_special" },
-    { name: "TV Miniseries", value: "tv_miniseries" },
-    { name: "Short Film", value: "short_film" },
+    { label: "TV Series", value: "tv_series" },
+    { label: "Movies", value: "movie" },
+    { label: "TV Special", value: "tv_special" },
+    { label: "TV Miniseries", value: "tv_miniseries" },
+    { label: "Short Film", value: "short_film" },
   ];
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/sources/?apiKey=Vrelb0zKfG8oeTDGR0jV3fYed2WlvJR4xctxiwrB`
+      `https://api.watchmode.com/v1/sources/?apiKey=5nZyqpvJWGqV4CpMBVHkdfj36cAQD20UjZ4DIk6l`
     )
       .then((res) => res.json())
       .then(
@@ -60,7 +64,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/genres/?apiKey=Vrelb0zKfG8oeTDGR0jV3fYed2WlvJR4xctxiwrB`
+      `https://api.watchmode.com/v1/genres/?apiKey=5nZyqpvJWGqV4CpMBVHkdfj36cAQD20UjZ4DIk6l`
     )
       .then((res) => res.json())
       .then(
@@ -129,6 +133,8 @@ const QuizPage = () => {
     }
   };
 
+  
+
   // create function to handle saving a title to our database
   const handleSaveTitle = async (titleId) => {
     // find the title in `searchedTitles` state by the matching id
@@ -160,7 +166,8 @@ const QuizPage = () => {
   };
 
   const handleChangeSource = (event) => {
-    event.preventDefault();
+    // event.stopImmediatePropagation();
+    // event.preventDefault();
 
     setSourceValues(
       [...event.target.selectedOptions].map((option) => option.value)
@@ -168,19 +175,22 @@ const QuizPage = () => {
   };
 
   const handleChangeType = (event) => {
-    event.preventDefault();
+    // event.stopImmediatePropagation();
+    // event.preventDefault();
 
     setTypeValues(
-      [...event.target.selectedOptions].map((option) => option.value)
+      [...event.target.typeValues].map((option) => option.value)
     );
   };
   const handleChangeGenre = (event) => {
-    event.preventDefault();
+    // event.stopImmediatePropagation();
+    // event.preventDefault();
 
     setGenreValues(
-      [...event.target.selectedOptions].map((option) => option.value)
+      [...event.target.genreValues].map((genres) => genres.value)
     );
   };
+
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -189,79 +199,71 @@ const QuizPage = () => {
   } else {
     return (
       <>
-        <Container fluid="md">
-          <Form onSubmit={handleSubmit}>
-            <Row>
-              <Form.Select
-                className="mt-3"
-                multiple={true}
+        <Box>
+          <FormControl p={4}>
+            <FormLabel>
+              Select type of show or movie
+            </FormLabel>
+              <Select
+                isMulti         
+                name="types"
+                options={types}
+                size="md"
+                placeholder="select one or more types"
+                closeMenuOnSelect={false}
                 onChange={handleChangeType}
+                >
+              </Select>
+
+             
+              <Select
+                isMulti
+                name="sources"
+                options={sources.map(({id, name}) => ({ value: id, label: name }))}
+                size="md"
+                placeholder="Select one or more viewing sources"
+                closeMenuOnSelect={false}
+                onChange={handleChangeSource} 
               >
-                <option name="types" disabled>
-                  Select Types(s){" "}
-                </option>
-                {isLoaded &&
-                  types.map((type) => (
-                    <option value={type.value}>{type.name}</option>
-                  ))}
-              </Form.Select>
-            </Row>
-            <Row>
-              <Form.Select
-                className="mt-3"
-                multiple={true}
-                onChange={handleChangeSource}
-              >
-                <option name="sources" disabled>
-                  Select Source(s){" "}
-                </option>
-                {isLoaded &&
-                  sources.map((source) => (
-                    <option value={source.id}>{source.name}</option>
-                  ))}
-              </Form.Select>
-            </Row>
-            <Row>
-              <Form.Select
-                className="mt-3"
-                multiple={true}
+              </Select>
+           
+              <Select
+                isMulti
+                name="genres"
+                options={genres.map(({id, name}) => ({ value: id, label: name }))}
+                size="md"
+                placeholder="Select one or more genres"
+                closeMenuOnSelect={false}
                 onChange={handleChangeGenre}
               >
-                <option name="genres" disabled>
-                  Select Genre(s){" "}
-                </option>
-                {isLoaded &&
-                  genres.map((genre) => (
-                    <option value={genre.id}>{genre.name}</option>
-                  ))}
-              </Form.Select>
-            </Row>
-            <Row>
-              <Button className="mt-3" type="submit">
+              </Select>
+            
+              <Button my={16} colorScheme='blue' type="submit" onClick={handleSubmit}>
                 {" "}
                 Find Your Shows/Movies{" "}
               </Button>
-            </Row>
-          </Form>
-        </Container>
+          
+          </FormControl>
+        </Box>
 
-        <Container>
-        <h2>
+        <Box>
+       <h2>
           {searchedTitles.length
             ? `Viewing ${searchedTitles.length} results:`
             : ''}
         </h2>
-        <CardGroup>
+        <Container>
           {searchedTitles.map((detail) => {
             return (
-              <Card key={detail.titleId} border='dark'>
+              <Box key={detail.titleId} border='dark'>
                 {detail.poster ? (
-                  <Card.Img src={detail.poster} alt={`The cover for ${detail.title}`} variant='top' />
+                  <Image src={detail.poster} alt={`The cover for ${detail.title}`} variant='top' />
                 ) : null}
-                <Card.Body>
-                  <Card.Title>{detail.title}</Card.Title>
+
+                
+                  <Heading>{detail.title}</Heading>
                   <p className='small'>Runtime: {detail.runtimeMinutes}</p>
-                  <Card.Text>{detail.plotOverview}</Card.Text>
+                  <Text>{detail.plotOverview}</Text>
                   {Auth.loggedIn() && (
                     <Button
                       disabled={savedTitleIds?.some((savedTitleId) => savedTitleId === detail.titleId)}
@@ -272,12 +274,12 @@ const QuizPage = () => {
                         : 'Save this Book!'}
                     </Button>
                   )}
-                </Card.Body>
-              </Card>
+                
+              </Box>
             );
           })}
-        </CardGroup>
-      </Container>
+        </Container>
+      </Box> 
       </>
     );
   }
