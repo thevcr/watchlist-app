@@ -1,4 +1,5 @@
-import { Flex, Spacer, Text, useMediaQuery } from '@chakra-ui/react';
+import { Flex, Spacer, Text, useMediaQuery,Box,
+    Button, } from '@chakra-ui/react';
 import { Icon } from '@chakra-ui/react';
 import {  FaSearch, FaFilm, FaRegSave } from 'react-icons/fa';
 import React from 'react';
@@ -26,8 +27,48 @@ const LandingPage = () => {
     },
   ];
   return (
-
-
+    < > 
+   
+    <Flex
+        alignItems="center"
+        w="medium"
+        px={isLargerThanMD ? '16' : '6'}
+        py="16"
+        minHeight="10vh"
+        justifyContent="space-between"
+        flexDirection={isLargerThanMD ? 'row' : 'column'}
+      >
+        <Box mr={isLargerThanMD ? '6' : '0'} w={isLargerThanMD ? '60%' : 'full'}>
+          <Text
+            fontSize={isLargerThanMD ? '5xl' : '4xl'}
+            fontWeight="bold"
+            mb="4"
+          >
+            {' '}
+            Welcome to Watch List!
+          </Text>
+  
+          <Text mb="6" fontSize={isLargerThanMD ? 'lg' : 'base'} opacity={0.7}>
+           Looking for something new to watch? We gotcha!
+          </Text>
+  
+          <Button
+            w="200px"
+            colorScheme="red"
+            variant="solid"
+            h="50px"
+            size={isLargerThanMD ? 'lg' : 'md'}
+            mb={isLargerThanMD ? '0' : '10'}
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href='PUTLINKHERE';
+              }}
+          >
+            Take The Questionaire!
+          </Button>
+          </Box>
+          </Flex>
+         
 
     
     <Flex
@@ -40,6 +81,8 @@ const LandingPage = () => {
       flexWrap="wrap"
       flexDirection={isLargerThanMD ? 'row' : 'column'}
     >
+
+ 
       {array.map((arr) => (
         <>
           <Flex
@@ -66,6 +109,7 @@ const LandingPage = () => {
         </>
       ))}
     </Flex>
+    </>
   );
 };
 
