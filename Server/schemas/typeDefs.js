@@ -14,10 +14,30 @@ const typeDefs = gql`
   }
 
   type ListTitle {
-    titleId: String
+    titleId: ID
+    title: String
+    plotOverview: String
+    type: String
+    poster: String
+    runtimeMinutes: Int
+    genreNames: [String]
+    userRating: Int
+    criticsRating: Int
+    networkNames: [String]
+    trailer: String
   }
   input ListTitleInput {
-    titleId: String
+    titleId: ID
+    title: String
+    plotOverview: String
+    type: String
+    poster: String
+    runtimeMinutes: Int
+    genreNames: [String]
+    userRating: Int
+    criticsRating: Int
+    networkNames: [String]
+    trailer: String
   }
   
   type Query {

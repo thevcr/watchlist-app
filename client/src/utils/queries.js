@@ -12,14 +12,13 @@ export const GET_ME = gql`
         title
         plotOverview
         type
+        poster
         runtimeMinutes
         genreNames
         userRating
-        criticScore
-        originalLanguage
+        criticsRating
         networkNames
         trailer
-        sources
       }
     }
   }
@@ -29,31 +28,17 @@ export const GET_TITLE = gql`
   {
     titles {
       titleId
-      limit
+      title
+      plotOverview
+      type
+      poster
+      runtimeMinutes
+      genreNames
+      userRating
+      criticsRating
+      networkNames
+      trailer
     }
   }
 `;
 
-export const GET_TITLEDETAILS = gql`
-  {
-    titles {
-      titleId
-      type
-      limit
-      titles {
-        titleId
-        title
-        plotOverview
-        type
-        runtimeMinutes
-        genreNames
-        userRating
-        criticScore
-        originalLanguage
-        networkNames
-        trailer
-        sources
-      }
-    }
-  }
-`;

@@ -30,9 +30,6 @@ const titleDetailsSchema = new Schema({
   criticScore: {
     type: String,
   },
-  originalLanguage: {
-    type: String,
-  },
   networkNames: [
     {
     type: String,
@@ -41,11 +38,11 @@ const titleDetailsSchema = new Schema({
   trailer: {
     type: String,
   },
-  sources: [
-    {
-    type: String,
-    }
-]
+//   sources: [
+//     {
+//     type: String,
+//     }
+// ]
 });
 
 module.exports = titleDetailsSchema;

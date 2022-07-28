@@ -1,10 +1,10 @@
 import QuizPage from "./pages/QuizPage";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage"
+import SavedTitles from "./pages/SavedTitles";
 import React from "react";
 // 1. import `ChakraProvider` component
 import { ChakraProvider } from '@chakra-ui/react'
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   ApolloClient,
@@ -42,7 +42,8 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/QuizPage" element={<QuizPage />} />
+            <Route path="/filters" element={<QuizPage />} />
+            <Route exact path="/saved" element={<SavedTitles />}  />
           </Routes>
         </>
       </BrowserRouter>
