@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Container, VStack, FormControl, Button, FormLabel, Image, Heading, Text } from '@chakra-ui/react';
+import { Box, Container, VStack, FormControl, Button, FormLabel, Image, Heading, Text, useBoolean, FormErrorMessage } from '@chakra-ui/react';
 import { Select, CreatableSelect } from "chakra-react-select";
+import { useForm, useController } from "react-hook-form";
 // import { Button, Container, Row, Form, Card, CardGroup } from "react-bootstrap";
 import { fetchListTitles } from "../utils/list-titles";
 import Auth from '../utils/auth';
@@ -10,6 +11,35 @@ import { SAVE_TITLE } from "../utils/mutations";
 import { fetchTitleDetails } from "../utils/title-details";
 // import { isAccordionItemSelected } from "react-bootstrap/esm/AccordionContext";
 import { FaRegistered } from "react-icons/fa";
+
+const ControlledSelect = ({ control, name, id, label, rules, ...props }) => {
+  const {
+    field: { onChange, onBlur, value, ref },
+    fieldState: { error }
+  } = useController({
+    name,
+    control,
+    rules
+  });
+
+  return (
+    <FormControl py={4} isInvalid={!!error} id={id}>
+      <FormLabel>{label}</FormLabel>
+
+      <Select
+        isMulti
+        name={name}
+        ref={ref}
+        onChange={onChange}
+        onBlur={onBlur}
+        value={value}
+        {...props}
+      />
+
+      <FormErrorMessage>{error && error.message}</FormErrorMessage>
+    </FormControl>
+  );
+};
 
 const QuizPage = () => {
   const [error, setError] = useState(null);
@@ -82,7 +112,7 @@ const QuizPage = () => {
       );
   }, []);
 
-  const handleUserSelection = async (sources, genres, values) => {
+  const handleUserSelection = async () => {
     try {
       const response = await fetchListTitles(sourceValues, genreValues, typeValues);
       
@@ -158,39 +188,51 @@ const QuizPage = () => {
       console.error(err);
     }
   };
+  
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  // const handleChangeSource = (event) => {
+  //     setSourceValues(
+  //     [...event.target.defaultValues].map((option) => option.value)
+  //   );
+  // };
 
-    handleUserSelection();
-  };
+  // const handleChangeType = (event) => {
+  //   // event.stopImmediatePropagation();
+  //   // event.preventDefault();
 
-  const handleChangeSource = (event) => {
-    // event.stopImmediatePropagation();
-    // event.preventDefault();
+  //   setTypeValues(
+  //     [...event.target.typeValues].map((option) => option.value)
+  //   );
+  // };
+  // const handleChangeGenre = (event) => {
+  //   // event.stopImmediatePropagation();
+  //   // event.preventDefault();
 
-    setSourceValues(
-      [...event.target.selectedOptions].map((option) => option.value)
-    );
-  };
+  //   setGenreValues(
+  //     [...event.target.genreValues].map((genres) => genres.value)
+  //   );
+  
 
-  const handleChangeType = (event) => {
-    // event.stopImmediatePropagation();
-    // event.preventDefault();
+ 
 
-    setTypeValues(
-      [...event.target.typeValues].map((option) => option.value)
-    );
-  };
-  const handleChangeGenre = (event) => {
-    // event.stopImmediatePropagation();
-    // event.preventDefault();
+const onSubmit = data => {
+  console.log(data);
+handleUserSelection(data)};
 
-    setGenreValues(
-      [...event.target.genreValues].map((genres) => genres.value)
-    );
-  };
+  const defaultValues = { types: [], genres: [], sources: [] };
 
+  const { control, handleSubmit } = useForm({ defaultValues });
+
+  const [isLoading, setLoading] = useBoolean(false);
+
+ 
+    // const submit = async (data) => {
+    //   setLoading.on();
+    //   setTimeout(() => {
+    //     setLoading.off();
+    //     alert(JSON.stringify(data, null, 2));
+    //   }, 3000);
+    // };
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -200,50 +242,49 @@ const QuizPage = () => {
     return (
       <>
         <Box>
-          <FormControl p={4}>
-            <FormLabel>
+          <Container as="form" p={4} onSubmit={handleSubmit(onSubmit)}>
+            {/* <FormLabel>
               Select type of show or movie
-            </FormLabel>
-              <Select
+            </FormLabel> */}
+              <ControlledSelect
                 isMulti         
                 name="types"
                 options={types}
                 size="md"
                 placeholder="select one or more types"
                 closeMenuOnSelect={false}
-                onChange={handleChangeType}
-                >
-              </Select>
-
-             
-              <Select
+                control={control}
+                />
+                          
+              <ControlledSelect
                 isMulti
+                defaultValues="sources"
                 name="sources"
                 options={sources.map(({id, name}) => ({ value: id, label: name }))}
                 size="md"
                 placeholder="Select one or more viewing sources"
                 closeMenuOnSelect={false}
-                onChange={handleChangeSource} 
-              >
-              </Select>
+                control={control}
+              />
            
-              <Select
+           
+              <ControlledSelect
                 isMulti
                 name="genres"
                 options={genres.map(({id, name}) => ({ value: id, label: name }))}
                 size="md"
                 placeholder="Select one or more genres"
                 closeMenuOnSelect={false}
-                onChange={handleChangeGenre}
-              >
-              </Select>
+                control={control}
+              />
+              
             
-              <Button my={16} colorScheme='blue' type="submit" onClick={handleSubmit}>
+              <Button isLoading={isLoading} my={16} colorScheme='blue' type="submit">
                 {" "}
                 Find Your Shows/Movies{" "}
               </Button>
           
-          </FormControl>
+          </Container>
         </Box>
 
         <Box>
