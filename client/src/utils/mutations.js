@@ -32,6 +32,16 @@ export const SAVE_TITLE = gql`
         email
         savedTitles {
           titleId
+          title
+          plotOverview
+          type
+          poster
+          runtimeMinutes
+          genreNames
+          userRating
+          criticsRating
+          networkNames
+          trailer
         }
     }
   }
@@ -40,18 +50,22 @@ export const SAVE_TITLE = gql`
 export const REMOVE_TITLE = gql`
   mutation removeTitle($titleId: ID!) {
     removeTitle(titleId: $titleId) {
-      titleId
-      title
-      plotOverview
-      type
-      runtimeMinutes
-      genreNames
-      userRating
-      criticScore
-      originalLanguage
-      networkNames
-      trailer
-      sources
+      _id
+      username
+      email
+      savedTitles {
+        titleId
+        title
+        plotOverview
+        type
+        poster
+        runtimeMinutes
+        genreNames
+        userRating
+        criticsRating
+        networkNames
+        trailer
+      }
     }
   }
 `;
