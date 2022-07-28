@@ -1,5 +1,5 @@
 import { Flex, Spacer, Text, useMediaQuery,Box,
-  Button, } from '@chakra-ui/react';
+    Button, } from '@chakra-ui/react';
 import { Icon } from '@chakra-ui/react';
 import {  FaSearch, FaFilm, FaRegSave } from 'react-icons/fa';
 import React from 'react';
@@ -9,28 +9,30 @@ import {Link} from 'react-router-dom';
 
 const LandingPage = () => {
 
-const [isLargerThanMD] = useMediaQuery('(min-width: 48em)');
-const array = [
-  {
-    id: 1,
-    text: " Welcome to WatchList! New films and tv shows just keep coming, but you don't have to drill down to find the next thing to watch.  We understand the struggle with finding a new TV show or Movie that you can binge-watch for hours or days. Don't worry! We got you covered! ",
-    icon: FaFilm,
-  },
-  {
-    id: 2,
-    text: ' Our App Watchlist gives you the option to decide what TV show or movie to watch through an easy-to-use interface. Simply click on our search button and fill out our quick questionaire. Filter TV shows by genre and streaming platform and we will comb through thousands of titles to help you pick the next new thing to watch!  ',
-    icon: FaSearch,
-  },
-  {
-    id: 3,
-    text: 'Create an account with us through easy signup! WatchList allows you to browse thousands of movie and show titles.  You even have the ability to keep track of all the titles that interest you by saving them to your account so you can always come back! ',
-    icon: FaRegSave,
-  },
-];
-return (
-  < > 
- 
-  <Flex
+  const [isLargerThanMD] = useMediaQuery('(min-width: 48em)');
+  const array = [
+    {
+      id: 1,
+      text: " Welcome to WatchList! New films and tv shows just keep coming, but you don't have to drill down to find the next thing to watch.  We understand the struggle with finding a new TV show or Movie that you can binge-watch for hours or days. Don't worry! We got you covered! ",
+      icon: FaFilm,
+    },
+    {
+      id: 2,
+      text: ' Our App Watchlist gives you the option to decide what TV show or movie to watch through an easy-to-use interface. Simply click on our search button and fill out our quick questionaire. Filter TV shows by genre and streaming platform and we will comb through thousands of titles to help you pick the next new thing to watch!  ',
+      icon: FaSearch,
+    },
+    {
+      id: 3,
+      text: 'Create an account with us through easy signup! WatchList allows you to browse thousands of movie and show titles.  You even have the ability to keep track of all the titles that interest you by saving them to your account so you can always come back! ',
+      icon: FaRegSave,
+    },
+  ];
+  return (
+    < > 
+   
+    
+    <Flex
+      minH="70vh"
       alignItems="center"
       w="medium"
       px={isLargerThanMD ? '16' : '6'}
