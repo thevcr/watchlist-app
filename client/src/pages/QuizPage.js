@@ -6,6 +6,7 @@ import { saveTitleIds, getSavedTitleIds } from '../utils/localStorage';
 import { useMutation } from '@apollo/client';
 import { SAVE_TITLE } from "../utils/mutations";
 import { fetchTitleDetails } from "../utils/apis/title-details";
+import { Spinner, Divider } from "@chakra-ui/react";
 
 const QuizPage = () => {
   const [error, setError] = useState(null);
@@ -40,7 +41,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/sources/?apiKey=bzEhgpPZ4GFs7fZGWdI53MjhKAXyYN5yCSSS04us`
+      `https://api.watchmode.com/v1/sources/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}`
     )
       .then((res) => res.json())
       .then(
@@ -60,7 +61,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/genres/?apiKey=bzEhgpPZ4GFs7fZGWdI53MjhKAXyYN5yCSSS04us`
+      `https://api.watchmode.com/v1/genres/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}`
     )
       .then((res) => res.json())
       .then(
@@ -115,13 +116,12 @@ const QuizPage = () => {
         plotOverview: detail.plot_overview,
         type: detail.type.charAt(0).toUpperCase() + detail.type.slice(1),
         poster: detail.poster,
-        runtimeMinutes: detail.runtime_minutes + " mins"|| ['No runtime to display'],
-        genreNames: detail.genre_names.join(", ") || ['No genres to display'],
-        userRating: detail.user_rating || ['No user ratings to display'],
-        criticsRating: detail.critic_score || ['No critic ratings to display'],
-        networkNames: detail.network_names || ['No networks to display'],
-        trailer: detail.trailer || ['No trailers to display'],
-        sources: detail.sources || ['No sources to display'],
+        runtimeMinutes: detail.runtime_minutes + " mins" || 'No runtime to display',
+        genreNames: detail.genre_names.join(", ") || 'No genres to display',
+        userRating: detail.user_rating,
+        criticsRating: detail.critic_score,
+        networkNames: detail.network_names || 'No networks to display',
+        trailer: detail.trailer || 'No trailers to display'
       }));
 
       setDisplayedTitles(detailsData);
@@ -134,7 +134,7 @@ const QuizPage = () => {
   // create function to handle saving a title to our database
   const handleSaveTitle = async (titleId) => {
     // find the title in `searchedTitles` state by the matching id
-    const titleToSave = searchedTitles.find((title) => title.titleId === titleId);
+    const titleToSave = displayedTitles.find((title) => title.titleId === titleId);
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -187,7 +187,13 @@ const QuizPage = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <div><Spinner
+    thickness='4px'
+    speed='0.65s'
+    emptyColor='gray.200'
+    color='blue.500'
+    size='xl'
+  /></div>;
   } else {
     return (
       <>
@@ -249,7 +255,7 @@ const QuizPage = () => {
             </Row>
           </Form>
         </Container>
-
+        <Divider />
         <Container>
         <h2>
           {displayedTitles.length
@@ -267,9 +273,11 @@ const QuizPage = () => {
                   <Card.Title>{detail.title}</Card.Title>
                   <p className='small'>Runtime: {detail.runtimeMinutes}</p>
                   <p className='small'>Genres: {detail.genreNames}</p>
+                  {/* <p className='small'>Sources: {detail.sources.name}</p> */}
                   <p className='small'>Type: {detail.type}</p>
                   <p className='small'>User Rating: {detail.userRating}</p>
                   <p className='small'>Critics Rating: {detail.criticsRating}</p>
+
                   <Card.Text className='mt-3'>{detail.plotOverview}</Card.Text>
                   {/* <p className="mt-3"><iframe width="230" height="205" src={detail.trailer} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p> */}
                   {Auth.loggedIn() && (
@@ -294,12 +302,3 @@ const QuizPage = () => {
 };
 
 export default QuizPage;
-
-//store the selected options in states
-//on submit on the form, call a switch case function that returns the corresponding value
-// call genres api - pass array of genres - get back genres id
-// call list titles function and pass params to return list of movie/show data
-// on the component you display liked movies you call the title details api and pass the title id stored under user when movie/show is liked.
-//when you click on find your show/movie button, then we need to send selected options to movie rec api
-//if you get any results back from api then display them on page, make another component file for that
-//movie rec library should be use to generate the list of genres and streaming services.

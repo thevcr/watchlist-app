@@ -1,10 +1,11 @@
 import React from 'react';
-import { Container, Card, Button } from 'react-bootstrap';
+import { Container, Card, Button, CardGroup } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_TITLE } from '../utils/mutations';
 import Auth from '../utils/auth';
 import { removeTitleId } from '../utils/localStorage';
+import { CircularProgress } from '@chakra-ui/react';
 
 const SavedTitles = () => {
   const { loading, data } = useQuery(GET_ME);
@@ -33,13 +34,13 @@ const SavedTitles = () => {
 
   // if data isn't here yet, say so
   if (loading) {
-    return <h2>LOADING...</h2>;
+    return <h2><CircularProgress value={30} size='120px' /></h2>;
   }
 
   return (
     <>
         <Container>
-          <h1>Viewing saved titles!</h1>
+          <h1>Your saved </h1>
         </Container>
       <Container>
         <h2>
@@ -47,6 +48,7 @@ const SavedTitles = () => {
             ? `Viewing ${userData.savedTitles.length} saved ${userData.savedTitles.length === 1 ? 'title' : 'titles'}:`
             : 'You have no saved titles!'}
         </h2>
+        <CardGroup>
           {userData.savedTitles.map((title) => {
             return (
                 <Card key={title.titleId} border='dark'>
@@ -61,13 +63,15 @@ const SavedTitles = () => {
                   <p className='small'>User Rating: {title.userRating}</p>
                   <p className='small'>Critics Rating: {title.criticsRating}</p>
                   <Card.Text className='mt-3'>{title.plotOverview}</Card.Text>
-                  <Button className='btn-block btn-danger' onClick={() => handleDeleteTitle(title.titleId)}>
-                    Delete this Title!
+                  <Button className='btn-block btn-danger card-btn mt-3' onClick={() => handleDeleteTitle(title.titleId)}>
+                    Delete this Title
                   </Button>
                 </Card.Body>
-              </Card>
+              </Card>           
             );
-          })}
+          })
+          }
+          </CardGroup>
       </Container>
     </>
   );

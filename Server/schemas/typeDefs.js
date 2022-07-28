@@ -19,10 +19,10 @@ const typeDefs = gql`
     plotOverview: String
     type: String
     poster: String
-    runtimeMinutes: Int
+    runtimeMinutes: String
     genreNames: [String]
-    userRating: Int
-    criticsRating: Int
+    userRating: Float
+    criticsRating: Float
     networkNames: [String]
     trailer: String
   }
@@ -32,10 +32,10 @@ const typeDefs = gql`
     plotOverview: String
     type: String
     poster: String
-    runtimeMinutes: Int
+    runtimeMinutes: String
     genreNames: [String]
-    userRating: Int
-    criticsRating: Int
+    userRating: Float
+    criticsRating: Float
     networkNames: [String]
     trailer: String
   }

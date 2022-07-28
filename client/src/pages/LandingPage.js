@@ -1,10 +1,19 @@
-import { Flex, Spacer, Text, useMediaQuery } from '@chakra-ui/react';
+import { Button, Flex, Spacer, Text, useMediaQuery } from '@chakra-ui/react';
 import { Icon } from '@chakra-ui/react';
 import { FaTools, FaHandshake, FaStar } from 'react-icons/fa';
 import React from 'react';
+import { Container } from 'react-bootstrap';
+import { Link } from "react-router-dom"
+import Auth from '../utils/auth';
 
 const LandingPage = () => {
 
+return (
+    <Container>
+        <p >A Landing Page Test</p>
+        <Button colorScheme='blue' as={Link} to='/search'>Start Adding To Your Watchlist</Button>
+    </Container>
+);
 //   const [isLargerThanMD] = useMediaQuery('(min-width: 48em)');
 //   const array = [
 //     {
