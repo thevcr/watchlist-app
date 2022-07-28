@@ -40,11 +40,11 @@ const QuizPage = () => {
 
   // hard coding types
   const types = [
-    { label: "TV Series", value: "tv_series" },
-    { label: "Movies", value: "movie" },
-    { label: "TV Special", value: "tv_special" },
-    { label: "TV Miniseries", value: "tv_miniseries" },
-    { label: "Short Film", value: "short_film" },
+    { value: "tv_series", label: "TV Series",  },
+    { value: "movie", label: "Movies" },
+    { value: "tv_special" , label: "TV Special"},
+    { value: "tv_miniseries" , label: "TV Miniseries" },
+    { value: "short_film", label: "Short Film" },
   ];
 
   // set up useEffect hook to save `savedTitleIds` list to localStorage on component unmount
@@ -55,7 +55,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/sources/?apiKey=54BD2C8NTMcdfjYt6cg8IwgYnUeiojg3Ogo5i4mR`
+      `https://api.watchmode.com/v1/sources/?apiKey=X2hnuJI9waQggvjnLIG4Z7q6JPK68Z9NRZdE0sNP`
     )
       .then((res) => res.json())
       .then(
@@ -75,7 +75,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/genres/?apiKey=54BD2C8NTMcdfjYt6cg8IwgYnUeiojg3Ogo5i4mR`
+      `https://api.watchmode.com/v1/genres/?apiKey=X2hnuJI9waQggvjnLIG4Z7q6JPK68Z9NRZdE0sNP`
     )
       .then((res) => res.json())
       .then(
@@ -96,9 +96,9 @@ const QuizPage = () => {
   const handleUserSelection = async () => {
     try {
       const response = await fetchListTitles(
-        sourceValues,
-        genreValues,
-        typeValues
+        sourceValues.map(source => source.value),
+        genreValues.map(genre => genre.value),
+        typeValues.map(type => type.value)
       );
 
       if (!response.ok) {
@@ -179,28 +179,33 @@ const QuizPage = () => {
     handleUserSelection();
   };
 
-  const handleChangeSource = (event) => {
-    if (event.target === "select-multiple") {
-      setSourceValues(
-        [...event.target.selectedOptions].map((option) => option.value)
-      );
-    }
-  };
+  console.log("source val " + sourceValues);
+  console.log("genre val " + genreValues);
+  console.log("type val " + typeValues);
 
-  const handleChangeType = (event) => {
-    if (event.target === "select-multiple") {
-      setTypeValues(
-        [...event.target.selectedOptions].map((option) => option.value)
-      );
-    }
-  };
-  const handleChangeGenre = (event) => {
-    if (event.target === "select-multiple") {
-      setGenreValues(
-        [...event.target.selectedOptions].map((option) => option.value)
-      );
-    }
-  };
+  // const handleChangeSource = (event) => {
+  //   if (event.target === "select-multiple")
+  //     setSourceValues(
+  //       [...event.target.selectedOptions].map((option) => option.value)
+  //     );
+  // };
+  // console.log(sourceValues);
+
+  // const handleChangeType = (event) => {
+  //   if (event.target === "select-multiple") {
+  //     setTypeValues(
+  //       [...event.target.selectedOptions].map((option) => option.value)
+  //     );
+  //   }
+  //   console.log(typeValues);
+  // };
+  // const handleChangeGenre = (event) => {
+  //   if (event.target === "select-multiple") {
+  //     setGenreValues(
+  //       [...event.target.selectedOptions].map((option) => option.value)
+  //     );
+  //   }
+  // };
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -224,17 +229,19 @@ const QuizPage = () => {
             <FormLabel>Select type of show or movie</FormLabel>
             <Select
               isMulti
-              name="types"
+              isSearchable
               options={types}
               size="md"
               placeholder="Select one or more types"
+              value={typeValues}
               closeMenuOnSelect={false}
-              onChange={handleChangeType}
+              onChange={setTypeValues}
+              className="selectTypes"
             ></Select>
 
             <Select
               isMulti
-              name="sources"
+              isSearchable
               options={
                 isLoaded &&
                 sources.map(({ id, name }) => ({ value: id, label: name }))
@@ -242,12 +249,14 @@ const QuizPage = () => {
               size="md"
               placeholder="Select one or more viewing sources"
               closeMenuOnSelect={false}
-              onChange={handleChangeSource}
+              onChange={setSourceValues}
+              value={sourceValues}
+              className="selectSource"
             ></Select>
 
             <Select
               isMulti
-              name="genres"
+              isSearchable
               options={
                 isLoaded &&
                 genres.map(({ id, name }) => ({ value: id, label: name }))
@@ -255,7 +264,9 @@ const QuizPage = () => {
               size="md"
               placeholder="Select one or more genres"
               closeMenuOnSelect={false}
-              onChange={handleChangeGenre}
+              onChange={setGenreValues}
+              value={genreValues}
+              className="selectGenres"
             ></Select>
 
             <Button my={16} colorScheme="blue" type="submit" onClick={handleSubmit}>
