@@ -64,7 +64,7 @@ const LandingPage = () => {
           mb={isLargerThanMD ? '0' : '10'}
           as={Link} to='/search'
         >
-          Take The Questionaire!
+          Find your shows now!
         </Button>
         </Box>
         </Flex>

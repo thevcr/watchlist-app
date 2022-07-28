@@ -55,7 +55,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/sources/?apiKey=X2hnuJI9waQggvjnLIG4Z7q6JPK68Z9NRZdE0sNP`
+      `https://api.watchmode.com/v1/sources/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}`
     )
       .then((res) => res.json())
       .then(
@@ -75,7 +75,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     fetch(
-      `https://api.watchmode.com/v1/genres/?apiKey=X2hnuJI9waQggvjnLIG4Z7q6JPK68Z9NRZdE0sNP`
+      `https://api.watchmode.com/v1/genres/?apiKey=${process.env.REACT_APP_WATCHMODE_KEY}`
     )
       .then((res) => res.json())
       .then(
@@ -178,34 +178,6 @@ const QuizPage = () => {
 
     handleUserSelection();
   };
-
-  console.log("source val " + sourceValues);
-  console.log("genre val " + genreValues);
-  console.log("type val " + typeValues);
-
-  // const handleChangeSource = (event) => {
-  //   if (event.target === "select-multiple")
-  //     setSourceValues(
-  //       [...event.target.selectedOptions].map((option) => option.value)
-  //     );
-  // };
-  // console.log(sourceValues);
-
-  // const handleChangeType = (event) => {
-  //   if (event.target === "select-multiple") {
-  //     setTypeValues(
-  //       [...event.target.selectedOptions].map((option) => option.value)
-  //     );
-  //   }
-  //   console.log(typeValues);
-  // };
-  // const handleChangeGenre = (event) => {
-  //   if (event.target === "select-multiple") {
-  //     setGenreValues(
-  //       [...event.target.selectedOptions].map((option) => option.value)
-  //     );
-  //   }
-  // };
 
   if (error) {
     return <div>Error: {error.message}</div>;
