@@ -104,7 +104,7 @@ const LandingPage = () => {
               key={arr.id}
             >
               <Icon as={arr.icon} boxSize={14} color="red.400" mb="5" />
-              <img alt="icons related to searching and saving titles: a reel, magnifying glass, and floppy disk">{arr.img}</img>
+              <img>{arr.img}</img>
               <Text>{arr.text}</Text>
             </Flex>
             <Spacer />
