@@ -50,7 +50,6 @@ const typeDefs = gql`
     saveTitle(titleData: ListTitleInput!): User
     removeTitle(titleId: ID!): User
   }
-
 `;
 
 module.exports = typeDefs;
