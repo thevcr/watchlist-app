@@ -11,16 +11,11 @@ import {
   Divider,
   Box,
   Container,
-  VStack,
   FormControl,
   Button,
   FormLabel,
-  Image,
-  Heading,
-  Text,
 } from "@chakra-ui/react";
-import { Select, CreatableSelect } from "chakra-react-select";
-import { FaRegistered } from "react-icons/fa";
+import { Select } from "chakra-react-select";
 
 const QuizPage = () => {
   const [error, setError] = useState(null);
