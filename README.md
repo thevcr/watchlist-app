@@ -24,8 +24,6 @@ Watchlist is a full stack web application where logged in users are able to narr
 - GraphQL
 
 
-
-
 # Finished Product
 Screenshot of desktop version
 
@@ -46,12 +44,11 @@ Screenshot of mobile version
 
 
 # Installation and Usage
-Pitchr was uploaded to the following GitHub repository:
+Watchlist was uploaded to the following GitHub repository:
 
 https://github.com/thevcr/watchlist-app
 
-
-Pitchr was deployed using Heroku
+Watchlist was deployed using Heroku: https://watchlist-list-app.herokuapp.com/
 
 # Collaborators
 Veronica R. https://github.com/thevcr
@@ -65,8 +62,5 @@ Brittany B. https://github.com/britbolt
 
 # Questions
 Got any questions? Reach out to any of our collaborators, we'll be glad to answer them!
-
-
-
 
 
